@@ -3,105 +3,31 @@
 import { useEffect, useState } from 'react'
 import './style.css'
 
-type Flower = {
-  id: number
-  name: string
-  color: string
-  price: number
-}
+import Header from '@/components/Header';
+import Hero from '@/components/Hero';
+import About from '@/components/About';
+import Courses from '@/components/Courses';
+import Footer from '@/components/Footer';
 
-type CreateFlowerDto = {
-  name: string
-  color: string
-  price: number
-}
-
-export default function Home() {
-  const [flowers, setFlowers] = useState<Flower[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchFlowers()
-  }, [])
-
-  async function fetchFlowers() {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const res = await fetch('http://localhost:5555/api/fow', {
-        method: 'GET',
-      })
-
-      if (!res.ok) throw new Error('Fetch error')
-
-      const data = await res.json()
-      setFlowers(data)
-    } catch {
-      setError('Ошибка загрузки')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function createFlower() {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const res = await fetch('http://localhost:5555/api/fow', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: 'Rose',
-          color: 'Red',
-          price: 10,
-        } satisfies CreateFlowerDto),
-      })
-
-      if (!res.ok) {
-        const text = await res.text()
-        throw new Error(text)
-      }
-
-      await fetchFlowers()
-    } catch (err) {
-      setError('Ошибка создания')
-    } finally {
-      setLoading(false)
-    }
-  }
-
+export default function HomePage() {
   return (
-      <div className="min-h-screen w-full flex justify-center items-center">
-        <div className="w-[420px] space-y-4">
-
-          <button
-              onClick={createFlower}
-              className="w-full bg-black text-white p-2 rounded"
-          >
-            Add flower
-          </button>
-
-          {loading && <p>Loading...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-
-          {flowers.map(flower => (
-              <div
-                  key={flower.id}
-                  className="border rounded-lg p-4 shadow-md"
-              >
-                <p><b>ID:</b> {flower.id}</p>
-                <p><b>Name:</b> {flower.name}</p>
-                <p><b>Color:</b> {flower.color}</p>
-                <p><b>Price:</b> {flower.price}</p>
-              </div>
-          ))}
-
+    <>
+      <Header />
+      <Hero />
+      <div className="h-8 bg-black w-full"></div>
+      <About />
+      <div className="h-12 bg-black w-full"></div>
+      <Courses />
+      <div className="h-32 bg-black w-full"></div>
+      <section className="w-full min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">More Coming Soon</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            We're constantly adding new courses and features to enhance your learning experience.
+          </p>
         </div>
-      </div>
-  )
+      </section>
+      <Footer />
+    </>
+  );
 }
